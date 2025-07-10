@@ -177,6 +177,36 @@
 
   const db = firebase.firestore();
 </script>
+<script>function appliquerCouleursDynamique() {
+  const docRef = db.collection("settings").doc("colors");
+
+  docRef.get()
+    .then(doc => {
+      if (!doc.exists) {
+        console.warn("Document 'colors' introuvable");
+        return;
+      }
+
+      const data = doc.data();
+
+      if (data.neonOne) {
+        document.documentElement.style.setProperty('--neon-violet', data.neonOne);
+      }
+      if (data.neonTwo) {
+        document.documentElement.style.setProperty('--neon-blue', data.neonTwo);
+      }
+      if (data.neonThree) {
+        document.documentElement.style.setProperty('--neon-pink', data.neonThree);
+      }
+      if (data.Bg) {
+        document.documentElement.style.setProperty('--dark-bg', data.Bg);
+      }
+    })
+    .catch(error => console.error("Erreur chargement couleurs : ", error));
+}
+
+document.addEventListener("DOMContentLoaded", appliquerCouleursDynamique);
+</script>
 <script>
   function chargerImageProfil() {
     db.collection("profile").doc("profile").get()
