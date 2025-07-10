@@ -555,7 +555,7 @@ document.addEventListener("DOMContentLoaded", afficherVideos);
 </script>
 <script>
 function chargerTextesDynamique() {
-  db.collection("textes").doc("social").get()
+  db.collection("sections").doc("social").get()
     .then(doc => {
       if (!doc.exists) return;
       const data = doc.data();
@@ -572,7 +572,7 @@ function chargerTextesDynamique() {
     })
     .catch(err => console.error("Erreur social :", err));
 
-  db.collection("textes").doc("don").get()
+  db.collection("sections").doc("don").get()
     .then(doc => {
       if (!doc.exists) return;
       const data = doc.data();
