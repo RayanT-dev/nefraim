@@ -296,8 +296,8 @@ Mon parcours débute par une formation classique en trompette au Conservatoire, 
     </section>
     <section id="social" class="py-20 bg-black bg-opacity-50">
         <div class="container mx-auto px-4 lg:px-12 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold mb-6 neon-text-pink">Rejoignez-moi</h2>
-            <p class="text-xl mb-12 max-w-2xl mx-auto">Suivez-moi sur les réseaux pour du contenu exclusif !</p>
+            <h2 class="text-3xl md:text-4xl font-bold mb-6 neon-text-pink" id="titre-reseaux" >Rejoignez-moi</h2>
+            <p class="text-xl mb-12 max-w-2xl mx-auto" id="texte-reseaux">Suivez-moi sur les réseaux pour du contenu exclusif !</p>
             
             <div class="flex flex-wrap justify-center gap-6">
                 <a href="https://www.youtube.com/@nefraimmusic" target="_blank" class="social-icon w-16 h-16 rounded-full border-2 border-blue-400 flex items-center justify-center text-blue-400 text-2xl hover:bg-blue-400 hover:text-black transition duration-300" style="border-color: var(--neon-blue); color: var(--neon-blue);">
@@ -315,8 +315,8 @@ Mon parcours débute par une formation classique en trompette au Conservatoire, 
     </section>
     <section id="don" class="py-20">
         <div class="container mx-auto px-4 lg:px-12 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold mb-8 neon-text-violet">Soutenez <span class="neon-text-blue">Nefraim</span></h2>
-            <p class="text-lg mb-6 text-gray-300">Vous pouvez faire un don du montant et de la devise de votre choix pour soutenir la création musicale indépendante.</p>
+            <h2 class="text-3xl md:text-4xl font-bold mb-8 neon-text-violet" id="titre-don">Soutenez <span class="neon-text-blue">Nefraim</span></h2>
+            <p class="text-lg mb-6 text-gray-300" id="texte-don">Vous pouvez faire un don du montant et de la devise de votre choix pour soutenir la création musicale indépendante.</p>
             
             <form action="https://www.paypal.com/donate" method="post" target="_blank" class="inline-block">
             <input type="hidden" name="business" value="44augustin44@gmail.com">
@@ -552,6 +552,50 @@ function afficherVideos() {
 }
 
 document.addEventListener("DOMContentLoaded", afficherVideos);
+</script>
+<script>
+function chargerTextesDynamique() {
+  db.collection("textes").doc("social").get()
+    .then(doc => {
+      if (!doc.exists) return;
+      const data = doc.data();
+
+      if (data.titreSocial) {
+        const h2Reseaux = document.getElementById("titre-reseaux");
+        if (h2Reseaux) h2Reseaux.textContent = data.titreSocial;
+      }
+
+      if (data.social) {
+        const pReseaux = document.getElementById("texte-reseaux");
+        if (pReseaux) pReseaux.textContent = data.social;
+      }
+    })
+    .catch(err => console.error("Erreur social :", err));
+
+  db.collection("textes").doc("don").get()
+    .then(doc => {
+      if (!doc.exists) return;
+      const data = doc.data();
+
+      if (data.titreDon) {
+        const h2Don = document.getElementById("titre-don");
+        if (h2Don) {
+          const mots = data.titreDon.trim().split(" ");
+          const premierMot = mots.shift();
+          h2Don.innerHTML = `<span class="neon-text-violet">${premierMot}</span> ${mots.join(" ")}`;
+        }
+      }
+
+      if (data.don) {
+        const pDon = document.getElementById("texte-don");
+        if (pDon) pDon.textContent = data.don;
+      }
+    })
+    .catch(err => console.error("Erreur don :", err));
+}
+
+document.addEventListener("DOMContentLoaded", chargerTextesDynamique);
+
 </script>
 
 </body>
